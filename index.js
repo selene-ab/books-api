@@ -41,9 +41,6 @@ const schema = {
 // Construimos validador para validar ese formato json
 const validate = ajv.compile(schema);
 
-// compobamos si el json que viene en el post cumple con el formato (schema)
-const valid = validate(req.body);
-
 // 6º Creamos metodos get y post
 
 // Metodo get que devuelve todos los libros que existen
@@ -60,7 +57,7 @@ app.get("/books", async (req, res) => {
 // Metodo post para crear nuevo libro
 app.post("/new", async (req, res) => {
   try {
-    if (valid) {
+    if (validate(req.body)) {
       const newBook = {
         Title: req.body.Title,
         Author: req.body.Author,
@@ -93,7 +90,7 @@ app.post("/delete", async (req, res) => {
 // Metodo post para actualizar un libro
 app.post("/update", async (req, res) => {
   try {
-    if (valid) {
+    if (validate(req.body)) {
       await knex("books").where("ID", req.body.ID).update({
         Title: req.body.Title,
         Author: req.body.Author,
