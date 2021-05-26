@@ -112,7 +112,7 @@ app.post("/update", async (req, res) => {
 
 app.post("/sort", async (req, res) => {
   try {
-    req.body.Order.forEach((bookID, index) => {
+    req.body.Order.forEach(async (bookID, index) => {
       await knex("books").where("ID", bookID).update({
         Order: index,
       });
