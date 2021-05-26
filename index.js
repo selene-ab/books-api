@@ -46,7 +46,10 @@ const validate = ajv.compile(schema);
 // Metodo get que devuelve todos los libros que existen
 app.get("/books", async (req, res) => {
   try {
-    const result = await knex.select("*").from("books").orderBy("Order", "asc");
+    const result = await knex
+      .select("*")
+      .from("books")
+      .orderBy("Position", "asc");
     res.send(result);
   } catch (error) {
     console.log(error);
@@ -114,7 +117,7 @@ app.post("/sort", async (req, res) => {
   try {
     req.body.Order.forEach(async (bookID, index) => {
       await knex("books").where("ID", bookID).update({
-        Order: index,
+        Position: index,
       });
     });
     res.send({ ok: true, message: "Libros ordenados" });
