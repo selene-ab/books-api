@@ -46,7 +46,7 @@ const validate = ajv.compile(schema);
 // Metodo get que devuelve todos los libros que existen
 app.get("/books", async (req, res) => {
   try {
-    const result = await knex.select("*").from("books");
+    const result = await knex.select("*").from("books").orderBy("Order", "asc");
     res.send(result);
   } catch (error) {
     console.log(error);
@@ -102,6 +102,22 @@ app.post("/update", async (req, res) => {
     } else {
       throw new Error("La información no es correcta");
     }
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+});
+
+// Metodo para reordenar libros
+
+app.post("/sort", async (req, res) => {
+  try {
+    req.body.Order.forEach((bookID, index) => {
+      await knex("books").where("ID", bookID).update({
+        Order: index,
+      });
+    });
+    res.send({ ok: true, message: "Libros ordenados" });
   } catch (error) {
     console.log(error);
     res.send(error);
